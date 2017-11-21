@@ -1,0 +1,58 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "FrontendName": {
+      "type": "string"
+    },
+    "publicIpAddressId": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "subnetId": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "privateIpAddress": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "privateIpAllocationMethod": {
+      "type": "string",
+      "allowedValues": [
+        "",
+        "Static",
+        "Dynamic"
+      ],
+      "defaultValue": ""
+    }
+  },
+  "variables": {
+    "ipConfig": [
+      {
+        "publicIPAddress": {
+          "id": "[parameters('publicIpAddressId')]"
+        }
+      },
+      {
+        "subnet": {
+          "id": "[parameters('subnetId')]"
+        },
+        "privateIPAddress": "[parameters('privateIpAddress')]",
+        "privateIPAllocationMethod": "[parameters('privateIpAllocationMethod')]"
+      }
+    ],
+    "frontendIPConfigurations": {
+      "name": "[parameters('FrontendName')]",
+      "properties": "[if(empty(parameters('publicIpAddressId')),variables('ipConfig')[1],variables('ipConfig')[0])]"
+    }
+  },
+  "resources": [
+  ],
+  "outputs": {
+    "frontendIPConfigurations": {
+      "type": "object",
+      "value": "[variables('frontendIPConfigurations')]"
+    }
+  }
+}

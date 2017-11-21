@@ -27,6 +27,9 @@
   <ItemGroup>
     <Content Include="azuredeploy.json" />
     <Content Include="azuredeploy.parameters.json" />
+    <None Include="LoadBalancingFrontendIpConfigurations.json" />
+    <None Include="LoadBalancingProbes.json" />
+    <None Include="LoadBalancingRules.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>

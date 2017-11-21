@@ -1,0 +1,64 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "RuleName": {
+      "type": "string"
+    },
+    "frontendIPConfiguration": {
+      "type": "string"
+    },
+    "backendAddressPool": {
+      "type": "string"
+    },
+    "Protocol": {
+      "type": "string"
+    },
+    "frontendPort": {
+      "type": "int"
+    },
+    "backendPort": {
+      "type": "int"
+    },
+    "enableFloatingIP": {
+      "type": "bool",
+      "defaultValue": false
+    },
+    "idleTimeoutInMinutes": {
+      "type": "int",
+      "defaultValue": 5
+    },
+    "probe": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "rule": {
+      "name": "[parameters('RuleName')]",
+      "properties": {
+        "frontendIPConfiguration": {
+          "id": "[parameters('frontendIPConfiguration')]"
+        },
+        "backendAddressPool": {
+          "id": "[parameters('backendAddressPool')]"
+        },
+        "protocol": "[parameters('Protocol')]",
+        "frontendPort": "[parameters('frontendPort')]",
+        "backendPort": "[parameters('backendPort')]",
+        "enableFloatingIP": "[parameters('enableFloatingIP')]",
+        "idleTimeoutInMinutes": "[parameters('idleTimeoutInMinutes')]",
+        "probe": {
+          "id": "[parameters('probe')]"
+        }
+      }
+    }
+  },
+  "resources": [
+  ],
+  "outputs": {
+    "loadBalancerRule": {
+      "type": "object",
+      "value": "[variables('rule')]"
+    }
+  }
+}

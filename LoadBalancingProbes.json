@@ -1,0 +1,42 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ProbeName": {
+      "type": "string"
+    },
+    "Protocol": {
+      "type": "string"
+    },
+    "ProbePort": {
+      "type": "int"
+    },
+    "intervalInSeconds": {
+      "type": "int",
+      "defaultValue": 5
+    },
+    "numberOfProbes": {
+      "type": "int",
+      "defaultValue": 2
+    }
+  },
+  "variables": {
+    "probe": {
+      "name": "[parameters('ProbeName')]",
+      "properties": {
+        "protocol": "[parameters('Protocol')]",
+        "port": "[parameters('ProbePort')]",
+        "intervalInSeconds": "[parameters('intervalInSeconds')]",
+        "numberOfProbes": "[parameters('numberOfProbes')]"
+      }
+    }
+  },
+  "resources": [
+  ],
+  "outputs": {
+    "loadBalancerProbe": {
+      "type": "object",
+      "value": "[variables('probe')]"
+    }
+  }
+}

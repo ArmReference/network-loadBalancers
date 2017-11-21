@@ -1,8 +1,187 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
-  "variables": {},
-  "resources": [],
-  "outputs": {}
+  "parameters": {
+    "StorageAccountName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "ContainerName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "SasToken": {
+      "type": "string",
+      "defaultValue": ""
+    }
+
+  },
+  "variables": {
+    "LoadBalancerName": "LB-TEST",
+    "templateUri": "[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('ContainerName'))]"
+  },
+  "resources": [
+    {
+      "name": "BuildLoadBalancingFrontendIpConfigurations-FEIP001",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUri'), '/LoadBalancingFrontendIpConfigurations.json', parameters('SasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "FrontendName": {
+            "value": "FEIP-001"
+          },
+          "publicIpAddressId": {
+            "value": "<< RESOURCE ID PLACEHOLDER >>"
+          },
+          "subnetId": {
+            "value": "<< RESOURCE ID PLACEHOLDER >>"
+          },
+          "privateIpAddress": {
+            "value": "10.1.1.1"
+          },
+          "privateIpAllocationMethod": {
+            "value": "Static"
+          }
+        }
+      }
+    },
+    {
+      "name": "BuildLoadBalancingProbes-PROBE001",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUri'), '/LoadBalancingProbes.json', parameters('SasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "ProbeName": {
+            "value": "Probe-001"
+          },
+          "protocol": {
+            "value": "TCP"
+          },
+          "ProbePort": {
+            "value": 80
+          },
+          "intervalInSeconds": {
+            "value": 5
+          },
+          "numberOfProbes": {
+            "value": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "BuildLoadBalancingRules-RULE001",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingProbes-PROBE001')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUri'), '/LoadBalancingRules.json', parameters('SasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "RuleName": {
+            "value": "Rule-001"
+          },
+          "frontendIPConfiguration": {
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
+          },
+          "backendAddressPool": {
+            "value": "<< RESOURCE ID PLACEHOLDER >>"
+          },
+          "protocol": {
+            "value": "TCP"
+          },
+          "frontendPort": {
+            "value": 80
+          },
+          "backendPort": {
+            "value": 80
+          },
+          "enableFloatingIP": {
+            "value": false
+          },
+          "idleTimeoutInMinutes": {
+            "value": 5
+          },
+          "probe": {
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value.name)]"
+          }
+        }
+      }
+    },
+    {
+      "name": "BuildLoadBalancingRules-RULE002",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingProbes-PROBE001')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUri'), '/LoadBalancingRules.json', parameters('SasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "RuleName": {
+            "value": "Rule-002"
+          },
+          "frontendIPConfiguration": {
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
+          },
+          "backendAddressPool": {
+            "value": "<< RESOURCE ID PLACEHOLDER >>"
+          },
+          "protocol": {
+            "value": "TCP"
+          },
+          "frontendPort": {
+            "value": 443
+          },
+          "backendPort": {
+            "value": 443
+          },
+          "enableFloatingIP": {
+            "value": true
+          },
+          "idleTimeoutInMinutes": {
+            "value": 30
+          },
+          "probe": {
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value.name)]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "ipConfig": {
+      "type": "array",
+      "value": "[createArray(reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value)]"
+    },
+    "Rules": {
+      "type": "array",
+      "value": "[createArray(reference('BuildLoadBalancingRules-RULE001').outputs.loadBalancerRule.value,reference('BuildLoadBalancingRules-RULE002').outputs.loadBalancerRule.value)]"
+    },
+    "Probes": {
+      "type": "array",
+      "value": "[createArray(reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value)]"
+    }
+  }
 }
