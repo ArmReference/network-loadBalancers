@@ -1,54 +1,106 @@
 ﻿{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
+  "contentVersion": "2017.09.01.0",
   "parameters": {
     "Name": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The name of the resource that is unique within a resource group. This name can be used to access the resource."
+      }
     },
-    "frontendIPConfigurationId": {
-      "type": "string"
+    "FrontendIPConfigurationId": {
+      "type": "string",
+      "metadata": {
+        "description": "A reference to frontend IP addresses."
+      }
     },
-    "backendAddressPoolId": {
-      "type": "string"
+    "BackendAddressPoolId": {
+      "type": "string",
+      "metadata": {
+        "description": "A reference to a pool of DIPs. Inbound traffic is randomly load balanced across IPs in the backend IPs."
+      }
     },
     "Protocol": {
-      "type": "string"
+      "type": "string",
+      "allowedValues": [
+        "All",
+        "Tcp",
+        "Udp"
+      ],
+      "metadata": {
+        "description": "The transport protocol for the endpoint. Possible values are 'Udp' or 'Tcp' or 'All."
+      }
     },
-    "frontendPort": {
-      "type": "int"
-    },
-    "backendPort": {
-      "type": "int"
-    },
-    "enableFloatingIP": {
-      "type": "bool",
-      "defaultValue": false
-    },
-    "idleTimeoutInMinutes": {
+    "FrontendPort": {
       "type": "int",
-      "defaultValue": 5
+      "minValue": 0,
+      "maxValue": 65534,
+      "metadata": {
+        "description": "The port for the external endpoint. Port numbers for each rule must be unique within the Load Balancer. Acceptable values are between 0 and 65534. Note that value 0 enables 'Any Port"
+      }
     },
-    "probeId": {
-      "type": "string"
+    "BackendPort": {
+      "type": "int",
+      "minValue": 0,
+      "maxValue": 65534,
+      "metadata": {
+        "description": "The port used for internal connections on the endpoint. Port numbers for each rule must be unique within the Load Balancer. Acceptable values are between 0 and 65534. Note that value 0 enables 'Any Port"
+      }
+    },
+    "EnableFloatingIP": {
+      "type": "bool",
+      "metadata": {
+        "description": "Configures a virtual machine's endpoint for the floating IP capability required to configure a SQL AlwaysOn Availability Group. This setting is required when using the SQL AlwaysOn Availability Groups in SQL server. This setting can't be changed after you create the endpoint."
+      }
+    },
+    "IdleTimeoutInMinutes": {
+      "type": "int",
+      "minValue": 4,
+      "maxValue": 30,
+      "defaultValue": 4,
+      "metadata": {
+        "description": "The timeout for the TCP idle connection. The value can be set between 4 and 30 minutes. The default value is 4 minutes. This element is only used when the protocol is set to TCP."
+      }
+    },
+    "ProbeId": {
+      "type": "string",
+      "metadata": {
+        "description": "The reference of the load balancer probe used by the load balancing rule."
+      }
+    },
+    "LoadDistribution": {
+      "type": "string",
+      "allowedValues": [
+        "Default",
+        "SourceIP",
+        "SourceIPProtocol"
+      ],
+      "metadata": {
+        "description": "The load distribution policy for this rule. Possible values are 'Default', 'SourceIP', and 'SourceIPProtocol'."
+      }
     }
   },
   "variables": {
+    "comments": {
+      "documentation": "https://docs.microsoft.com/en-us/rest/api/load-balancer/loadbalancers/createorupdate#definitions_loadbalancingrule"
+    },
     "rule": {
       "name": "[parameters('Name')]",
       "properties": {
         "frontendIPConfiguration": {
-          "id": "[parameters('frontendIPConfigurationId')]"
+          "id": "[parameters('FrontendIPConfigurationId')]"
         },
         "backendAddressPool": {
           "id": "[parameters('backendAddressPoolId')]"
         },
         "protocol": "[parameters('Protocol')]",
-        "frontendPort": "[parameters('frontendPort')]",
-        "backendPort": "[parameters('backendPort')]",
-        "enableFloatingIP": "[parameters('enableFloatingIP')]",
-        "idleTimeoutInMinutes": "[parameters('idleTimeoutInMinutes')]",
+        "loadDistribution": "[parameters('LoadDistribution')]",
+        "frontendPort": "[parameters('FrontendPort')]",
+        "backendPort": "[parameters('BackendPort')]",
+        "enableFloatingIP": "[parameters('EnableFloatingIP')]",
+        "idleTimeoutInMinutes": "[parameters('IdleTimeoutInMinutes')]",
         "probe": {
-          "id": "[parameters('probeId')]"
+          "id": "[parameters('ProbeId')]"
         }
       }
     }
@@ -56,7 +108,7 @@
   "resources": [
   ],
   "outputs": {
-    "loadBalancerRule": {
+    "loadBalancingRules": {
       "type": "object",
       "value": "[variables('rule')]"
     }
