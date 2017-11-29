@@ -3,19 +3,31 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "Name": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The name of the resource that is unique within a resource group. This name can be used to access the resource."
+      }
     },
     "publicIpAddressId": {
       "type": "string",
-      "defaultValue": ""
+      "defaultValue": "",
+      "metadata": {
+        "description": "The reference of the Public IP resource."
+      }
     },
     "subnetId": {
       "type": "string",
-      "defaultValue": ""
+      "defaultValue": "",
+      "metadata": {
+        "description": "The reference of the subnet resource."
+      }
     },
     "privateIpAddress": {
       "type": "string",
-      "defaultValue": ""
+      "defaultValue": "",
+      "metadata": {
+        "description": "The private IP address of the IP configuration."
+      }
     },
     "privateIpAllocationMethod": {
       "type": "string",
@@ -24,10 +36,16 @@
         "Static",
         "Dynamic"
       ],
-      "defaultValue": ""
+      "defaultValue": "",
+      "metadata": {
+        "description": "The Private IP allocation method. Possible values are: 'Static' and 'Dynamic'."
+      }
     }
   },
   "variables": {
+    "comments": {
+      "documentation": "https://docs.microsoft.com/en-us/rest/api/load-balancer/loadbalancers/createorupdate#definitions_frontendipconfiguration"
+    },
     "ipConfig": [
       {
         "publicIPAddress": {
