@@ -8,28 +8,28 @@
         "description": "The name of the resource that is unique within a resource group. This name can be used to access the resource."
       }
     },
-    "publicIpAddressId": {
+    "PublicIpAddressId": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "The reference of the Public IP resource."
       }
     },
-    "subnetId": {
+    "SubnetId": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "The reference of the subnet resource."
       }
     },
-    "privateIpAddress": {
+    "PrivateIpAddress": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "The private IP address of the IP configuration."
       }
     },
-    "privateIpAllocationMethod": {
+    "PrivateIpAllocationMethod": {
       "type": "string",
       "allowedValues": [
         "",
@@ -49,20 +49,20 @@
     "ipConfig": [
       {
         "publicIPAddress": {
-          "id": "[parameters('publicIpAddressId')]"
+          "id": "[parameters('PublicIpAddressId')]"
         }
       },
       {
         "subnet": {
-          "id": "[parameters('subnetId')]"
+          "id": "[parameters('SubnetId')]"
         },
-        "privateIPAddress": "[parameters('privateIpAddress')]",
-        "privateIPAllocationMethod": "[parameters('privateIpAllocationMethod')]"
+        "privateIPAddress": "[parameters('PrivateIpAddress')]",
+        "privateIPAllocationMethod": "[parameters('PrivateIpAllocationMethod')]"
       }
     ],
     "frontendIPConfigurations": {
       "name": "[parameters('Name')]",
-      "properties": "[if(empty(parameters('publicIpAddressId')),variables('ipConfig')[1],variables('ipConfig')[0])]"
+      "properties": "[if(empty(parameters('PublicIpAddressId')),variables('ipConfig')[1],variables('ipConfig')[0])]"
     }
   },
   "resources": [

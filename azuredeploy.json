@@ -30,22 +30,22 @@
         "mode": "Incremental",
         "templateLink": {
           "uri": "[concat(variables('templateUri'), '/FrontendIpConfigurations.json', parameters('SasToken'))]",
-          "contentVersion": "1.0.0.0"
+          "contentVersion": "2017.09.01.0"
         },
         "parameters": {
           "Name": {
             "value": "FEIP-001"
           },
-          "publicIpAddressId": {
+          "PublicIpAddressId": {
             "value": "<< RESOURCE ID PLACEHOLDER >>"
           },
-          "subnetId": {
+          "SubnetId": {
             "value": "<< RESOURCE ID PLACEHOLDER >>"
           },
-          "privateIpAddress": {
+          "PrivateIpAddress": {
             "value": "10.1.1.1"
           },
-          "privateIpAllocationMethod": {
+          "PrivateIpAllocationMethod": {
             "value": "Static"
           }
         }
