@@ -2,16 +2,10 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "VirtualNetworkName": {
+    "PublicIpAddressName": {
       "type": "string"
     },
-    "VirtualNetworkResourceGroup": {
-      "type": "string"
-    },
-    "SubnetName": {
-      "type": "string"
-    },
-    "PrivateIpAddress": {
+    "PublicIpAddressResourceGroup": {
       "type": "string"
     },
     "StorageAccountName": {
@@ -33,8 +27,7 @@
     "BackendAddressPoolName": "[concat(variables('LoadBalancerName'),'-BePool')]",
     "LoadbalancingProbeName": "[concat(variables('LoadBalancerName'),'-Probe')]",
     "LoadBalancingRuleName": "[concat(variables('LoadBalancerName'),'-Rule')]",
-    "vnetID": "[resourceId(parameters('VirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('VirtualNetworkName'))]",
-    "SubnetId": "[concat(variables('vnetID'),'/subnets/', parameters('SubnetName'))]",
+    "PublicIpId": "[resourceId(parameters('PublicIpAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses', parameters('PublicIpAddressName'))]",
     "templateUri": "[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('ContainerName'),'/LoadBalancers')]"
   },
   "resources": [
@@ -54,13 +47,13 @@
             "value": "[concat(variables('FrontendIpConfigurationName'),'-001')]"
           },
           "PublicIpAddressId": {
-            "value": ""
+            "value": "[variables('PublicIpId')]"
           },
           "SubnetId": {
-            "value": "[variables('SubnetId')]"
+            "value": ""
           },
           "PrivateIpAddress": {
-            "value": "10.0.0.10"
+            "value": ""
           },
           "PrivateIpAllocationMethod": {
             "value": "Static"

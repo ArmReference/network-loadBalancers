@@ -28,7 +28,7 @@
     }
   },
   "variables": {
-    "LoadBalancerName": "ELB",
+    "LoadBalancerName": "ILB",
     "FrontendIpConfigurationName": "[concat(variables('LoadBalancerName'),'-FeConfig')]",
     "BackendAddressPoolName": "[concat(variables('LoadBalancerName'),'-BePool')]",
     "LoadbalancingProbeName": "[concat(variables('LoadBalancerName'),'-Probe')]",
@@ -60,7 +60,7 @@
             "value": "[variables('SubnetId')]"
           },
           "PrivateIpAddress": {
-            "value": "10.0.0.10"
+            "value": "[parameters('PrivateIpAddress')]"
           },
           "PrivateIpAllocationMethod": {
             "value": "Static"

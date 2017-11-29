@@ -2,17 +2,11 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "VirtualNetworkName": {
-      "value": "wb-azr-01"
+    "PublicIpAddressName": {
+      "value": "USNCPLB004SD01-pip"
     },
-    "VirtualNetworkResourceGroup": {
-      "value": "wb-azr-01"
-    },
-    "SubnetName": {
-      "value": "default"
-    },
-    "PrivateIpAddress": {
-      "value": "10.0.0.10"
+    "PublicIpAddressResourceGroup": {
+      "value": "OMSTesting"
     },
     "StorageAccountName": {
       "value": "omssolutions"
