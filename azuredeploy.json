@@ -60,7 +60,7 @@
         "mode": "Incremental",
         "templateLink": {
           "uri": "[concat(variables('templateUri'), '/Probes.json', parameters('SasToken'))]",
-          "contentVersion": "1.0.0.0"
+          "contentVersion": "2017.09.01.0"
         },
         "parameters": {
           "Name": {
