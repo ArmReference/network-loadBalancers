@@ -92,35 +92,38 @@
         "mode": "Incremental",
         "templateLink": {
           "uri": "[concat(variables('templateUri'), '/Rules.json', parameters('SasToken'))]",
-          "contentVersion": "1.0.0.0"
+          "contentVersion": "2017.09.01.0"
         },
         "parameters": {
           "Name": {
             "value": "Rule-001"
           },
-          "frontendIPConfigurationId": {
+          "FrontendIPConfigurationId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
-          "backendAddressPoolId": {
+          "BackendAddressPoolId": {
             "value": "<< RESOURCE ID PLACEHOLDER >>"
           },
-          "protocol": {
+          "Protocol": {
             "value": "TCP"
           },
-          "frontendPort": {
+          "FrontendPort": {
             "value": 80
           },
-          "backendPort": {
+          "BackendPort": {
             "value": 80
           },
-          "enableFloatingIP": {
+          "EnableFloatingIP": {
             "value": false
           },
-          "idleTimeoutInMinutes": {
+          "IdleTimeoutInMinutes": {
             "value": 5
           },
-          "probeId": {
+          "ProbeId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.Probe.value.name)]"
+          },
+          "LoadDistribution": {
+            "value": "Default"
           }
         }
       }
@@ -136,35 +139,38 @@
         "mode": "Incremental",
         "templateLink": {
           "uri": "[concat(variables('templateUri'), '/Rules.json', parameters('SasToken'))]",
-          "contentVersion": "1.0.0.0"
+          "contentVersion": "2017.09.01.0"
         },
         "parameters": {
           "Name": {
             "value": "Rule-002"
           },
-          "frontendIPConfigurationId": {
+          "FrontendIPConfigurationId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
-          "backendAddressPoolId": {
+          "BackendAddressPoolId": {
             "value": "<< RESOURCE ID PLACEHOLDER >>"
           },
-          "protocol": {
+          "Protocol": {
             "value": "TCP"
           },
-          "frontendPort": {
+          "FrontendPort": {
             "value": 443
           },
-          "backendPort": {
+          "BackendPort": {
             "value": 443
           },
-          "enableFloatingIP": {
+          "EnableFloatingIP": {
             "value": true
           },
-          "idleTimeoutInMinutes": {
+          "IdleTimeoutInMinutes": {
             "value": 30
           },
-          "probeId": {
+          "ProbeId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.Probe.value.name)]"
+          },
+          "LoadDistribution": {
+            "value": "Default"
           }
         }
       }
