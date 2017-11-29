@@ -27,13 +27,14 @@
   <ItemGroup>
     <Content Include="azuredeploy.json" />
     <Content Include="azuredeploy.parameters.json" />
-    <None Include="LoadBalancingFrontendIpConfigurations.json" />
-    <None Include="LoadBalancingProbes.json" />
+    <None Include="BackendAddressPools.json" />
+    <None Include="FrontendIpConfigurations.json" />
+    <None Include="LoadBalancer.json" />
+    <None Include="Probes.json" />
     <None Include="LoadBalancingRules.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <Content Include="Deploy-AzureResourceGroup.ps1" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
