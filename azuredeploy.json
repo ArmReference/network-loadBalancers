@@ -11,6 +11,9 @@
     "SubnetName": {
       "type": "string"
     },
+    "PrivateIpAddress": {
+      "type": "string"
+    },
     "StorageAccountName": {
       "type": "string",
       "defaultValue": ""
@@ -32,7 +35,7 @@
     "LoadBalancingRuleName": "[concat(variables('LoadBalancerName'),'-Rule')]",
     "vnetID": "[resourceId(parameters('VirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('VirtualNetworkName'))]",
     "SubnetId": "[concat(variables('vnetID'),'/subnets/', parameters('SubnetName'))]",
-    "templateUri": "[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('ContainerName'))]"
+    "templateUri": "[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('ContainerName'),'/LoadBalancers')]"
   },
   "resources": [
     {
@@ -57,7 +60,7 @@
             "value": "[variables('SubnetId')]"
           },
           "PrivateIpAddress": {
-            "value": "10.1.1.1"
+            "value": "10.0.0.10"
           },
           "PrivateIpAllocationMethod": {
             "value": "Static"
@@ -101,7 +104,7 @@
             "value": "[concat(variables('LoadbalancingProbeName'),'-001')]"
           },
           "Protocol": {
-            "value": "TCP"
+            "value": "Tcp"
           },
           "Port": {
             "value": 80
@@ -138,10 +141,10 @@
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
           "BackendAddressPoolId": {
-            "value": "[createArray(reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value)]"
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/backendAddressPools/',reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value.name)]"
           },
           "Protocol": {
-            "value": "TCP"
+            "value": "Tcp"
           },
           "FrontendPort": {
             "value": 80
@@ -187,10 +190,10 @@
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
           "BackendAddressPoolId": {
-            "value": "[createArray(reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value)]"
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/backendAddressPools/',reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value.name)]"
           },
           "Protocol": {
-            "value": "TCP"
+            "value": "Tcp"
           },
           "FrontendPort": {
             "value": 443
@@ -238,10 +241,10 @@
             "value": "[createArray(reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value)]"
           },
           "LoadBalancingRules": {
-            "value": "[createArray(reference('BuildLoadBalancingRules-RULE001').outputs.loadBalancerRule.value,reference('BuildLoadBalancingRules-RULE002').outputs.loadBalancerRule.value)]"
+            "value": "[createArray(reference('BuildLoadBalancingRules-RULE001').outputs.loadBalancingRules.value,reference('BuildLoadBalancingRules-RULE002').outputs.loadBalancingRules.value)]"
           },
           "Probes": {
-            "value": "[createArray(reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value)]"
+            "value": "[createArray(reference('BuildLoadBalancingProbes-PROBE001').outputs.Probe.value)]"
           }
         }
       }
@@ -258,11 +261,11 @@
     },
     "LoadBalancingRules": {
       "type": "array",
-      "value": "[createArray(reference('BuildLoadBalancingRules-RULE001').outputs.loadBalancerRule.value,reference('BuildLoadBalancingRules-RULE002').outputs.loadBalancerRule.value)]"
+      "value": "[createArray(reference('BuildLoadBalancingRules-RULE001').outputs.loadBalancingRules.value,reference('BuildLoadBalancingRules-RULE002').outputs.loadBalancingRules.value)]"
     },
     "Probes": {
       "type": "array",
-      "value": "[createArray(reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value)]"
+      "value": "[createArray(reference('BuildLoadBalancingProbes-PROBE001').outputs.Probe.value)]"
     }
   }
 }
