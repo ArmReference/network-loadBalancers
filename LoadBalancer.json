@@ -1,0 +1,57 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "2017.09.01.0",
+  "parameters": {
+    "Name": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource name."
+      }
+    },
+    "FrontendIpConfigurations": {
+      "type": "array",
+      "metadata": {
+        "description": "Object representing the frontend IPs to be used for the load balancer"
+      }
+    },
+    "BackendAddressPools": {
+      "type": "array",
+      "metadata": {
+        "description": "Collection of backend address pools used by a load balancer"
+      }
+    },
+    "LoadBalancingRules": {
+      "type": "array",
+      "metadata": {
+        "description": "Object collection representing the load balancing rules Gets the provisioning"
+      }
+    },
+    "Probes": {
+      "type": "array",
+      "metadata": {
+        "description": "Collection of probe objects used in the load balancer"
+      }
+    }
+  },
+  "variables": {
+    "comments": {
+      "documentation": "https://docs.microsoft.com/en-us/rest/api/load-balancer/loadbalancers/createorupdate#definitions_loadbalancer"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/loadBalancers",
+      "name": "[parameters('Name')]",
+      "apiVersion": "2017-09-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "frontendIPConfigurations": "[parameters('FrontendIpConfigurations')]",
+        "backendAddressPools": "[parameters('BackendAddressPools')]",
+        "loadBalancingRules": "[parameters('LoadBalancingRules')]",
+        "probes": "[parameters('Probes')]"
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
