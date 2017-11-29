@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ProbeName": {
+    "Name": {
       "type": "string"
     },
     "Protocol": {
@@ -22,7 +22,7 @@
   },
   "variables": {
     "probe": {
-      "name": "[parameters('ProbeName')]",
+      "name": "[parameters('Name')]",
       "properties": {
         "protocol": "[parameters('Protocol')]",
         "port": "[parameters('ProbePort')]",

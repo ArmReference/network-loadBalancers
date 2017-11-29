@@ -63,7 +63,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "ProbeName": {
+          "Name": {
             "value": "Probe-001"
           },
           "protocol": {
