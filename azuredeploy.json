@@ -66,16 +66,16 @@
           "Name": {
             "value": "Probe-001"
           },
-          "protocol": {
+          "Protocol": {
             "value": "TCP"
           },
-          "ProbePort": {
+          "Port": {
             "value": 80
           },
-          "intervalInSeconds": {
+          "IntervalInSeconds": {
             "value": 5
           },
-          "numberOfProbes": {
+          "NumberOfProbes": {
             "value": 2
           }
         }
@@ -120,7 +120,7 @@
             "value": 5
           },
           "probeId": {
-            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value.name)]"
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.Probe.value.name)]"
           }
         }
       }
@@ -164,7 +164,7 @@
             "value": 30
           },
           "probeId": {
-            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value.name)]"
+            "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.Probe.value.name)]"
           }
         }
       }
