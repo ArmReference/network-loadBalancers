@@ -3,38 +3,83 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "Name": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "Gets name of the resource that is unique within a resource group. This name can be used to access the resource."
+      }
     },
     "Protocol": {
-      "type": "string"
+      "type": "string",
+      "allowedValues": [
+        "Http",
+        "Tcp"
+      ],
+      "metadata": {
+        "description": "The protocol of the end point. Possible values are: 'Http' or 'Tcp'. If 'Tcp' is specified, a received ACK is required for the probe to be successful. If 'Http' is specified, a 200 OK response from the specifies URI is required for the probe to be successful."
+      }
     },
-    "ProbePort": {
-      "type": "int"
-    },
-    "intervalInSeconds": {
+    "Port": {
       "type": "int",
-      "defaultValue": 5
+      "minValue": 1,
+      "maxValue": 65535,
+      "metadata": {
+        "description": "The port for communicating the probe. Possible values range from 1 to 65535, inclusive."
+      }
     },
-    "numberOfProbes": {
+    "IntervalInSeconds": {
       "type": "int",
-      "defaultValue": 2
+      "minValue": 5,
+      "defaultValue": 15,
+      "metadata": {
+        "description": "The interval, in seconds, for how frequently to probe the endpoint for health status. Typically, the interval is slightly less than half the allocated timeout period (in seconds) which allows two full probes before taking the instance out of rotation. The default value is 15, the minimum value is 5."
+      }
+    },
+    "NumberOfProbes": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "The number of probes where if no response, will result in stopping further traffic from being delivered to the endpoint. This values allows endpoints to be taken out of rotation faster or slower than the typical times used in Azure."
+      }
+    },
+    "RequestPath": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The URI used for requesting health status from the VM. Path is required if a protocol is set to http. Otherwise, it is not allowed. There is no default value."
+      }
     }
   },
   "variables": {
-    "probe": {
-      "name": "[parameters('Name')]",
-      "properties": {
-        "protocol": "[parameters('Protocol')]",
-        "port": "[parameters('ProbePort')]",
-        "intervalInSeconds": "[parameters('intervalInSeconds')]",
-        "numberOfProbes": "[parameters('numberOfProbes')]"
+    "comments": {
+      "documentation": "https://docs.microsoft.com/en-us/rest/api/load-balancer/LoadBalancers/CreateOrUpdate#definitions_probe"
+    },
+    "probes": [
+      {
+        "name": "[parameters('Name')]",
+        "properties": {
+          "protocol": "[parameters('Protocol')]",
+          "port": "[parameters('Port')]",
+          "intervalInSeconds": "[parameters('IntervalInSeconds')]",
+          "numberOfProbes": "[parameters('NumberOfProbes')]"
+        }
+      },
+      {
+        "name": "[parameters('Name')]",
+        "properties": {
+          "protocol": "[parameters('Protocol')]",
+          "port": "[parameters('Port')]",
+          "requestPath": "[parameters('RequestPath')]",
+          "intervalInSeconds": "[parameters('IntervalInSeconds')]",
+          "numberOfProbes": "[parameters('NumberOfProbes')]"
+        }
       }
-    }
+    ],
+    "probe": "[if(equals(parameters('Protocol'),'Http'),variables('probes')[1],variables('probes')[0])]"
   },
   "resources": [
   ],
   "outputs": {
-    "loadBalancerProbe": {
+    "Probe": {
       "type": "object",
       "value": "[variables('probe')]"
     }
