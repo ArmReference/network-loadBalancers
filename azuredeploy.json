@@ -33,7 +33,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "FrontendName": {
+          "Name": {
             "value": "FEIP-001"
           },
           "publicIpAddressId": {

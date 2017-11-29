@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "FrontendName": {
+    "Name": {
       "type": "string"
     },
     "publicIpAddressId": {
@@ -43,7 +43,7 @@
       }
     ],
     "frontendIPConfigurations": {
-      "name": "[parameters('FrontendName')]",
+      "name": "[parameters('Name')]",
       "properties": "[if(empty(parameters('publicIpAddressId')),variables('ipConfig')[1],variables('ipConfig')[0])]"
     }
   },
