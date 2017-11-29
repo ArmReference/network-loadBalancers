@@ -2,6 +2,15 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "VirtualNetworkName": {
+      "type": "string"
+    },
+    "VirtualNetworkResourceGroup": {
+      "type": "string"
+    },
+    "SubnetName": {
+      "type": "string"
+    },
     "StorageAccountName": {
       "type": "string",
       "defaultValue": ""
@@ -14,10 +23,15 @@
       "type": "string",
       "defaultValue": ""
     }
-
   },
   "variables": {
-    "LoadBalancerName": "LB-TEST",
+    "LoadBalancerName": "ELB",
+    "FrontendIpConfigurationName": "[concat(variables('LoadBalancerName'),'-FeConfig')]",
+    "BackendAddressPoolName": "[concat(variables('LoadBalancerName'),'-BePool')]",
+    "LoadbalancingProbeName": "[concat(variables('LoadBalancerName'),'-Probe')]",
+    "LoadBalancingRuleName": "[concat(variables('LoadBalancerName'),'-Rule')]",
+    "vnetID": "[resourceId(parameters('VirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('VirtualNetworkName'))]",
+    "SubnetId": "[concat(variables('vnetID'),'/subnets/', parameters('SubnetName'))]",
     "templateUri": "[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('ContainerName'))]"
   },
   "resources": [
@@ -34,13 +48,13 @@
         },
         "parameters": {
           "Name": {
-            "value": "FEIP-001"
+            "value": "[concat(variables('FrontendIpConfigurationName'),'-001')]"
           },
           "PublicIpAddressId": {
-            "value": "<< RESOURCE ID PLACEHOLDER >>"
+            "value": ""
           },
           "SubnetId": {
-            "value": "<< RESOURCE ID PLACEHOLDER >>"
+            "value": "[variables('SubnetId')]"
           },
           "PrivateIpAddress": {
             "value": "10.1.1.1"
@@ -64,7 +78,7 @@
         },
         "parameters": {
           "Name": {
-            "value": "BEPool-001"
+            "value": "[concat(variables('BackendAddressPoolName'),'-001')]"
           }
         }
       }
@@ -84,7 +98,7 @@
         },
         "parameters": {
           "Name": {
-            "value": "Probe-001"
+            "value": "[concat(variables('LoadbalancingProbeName'),'-001')]"
           },
           "Protocol": {
             "value": "TCP"
@@ -113,12 +127,12 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('templateUri'), '/Rules.json', parameters('SasToken'))]",
+          "uri": "[concat(variables('templateUri'), '/LoadBalancingRules.json', parameters('SasToken'))]",
           "contentVersion": "2017.09.01.0"
         },
         "parameters": {
           "Name": {
-            "value": "Rule-001"
+            "value": "[concat(variables('LoadBalancingRuleName'),'-001')]"
           },
           "FrontendIPConfigurationId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
@@ -162,12 +176,12 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('templateUri'), '/Rules.json', parameters('SasToken'))]",
+          "uri": "[concat(variables('templateUri'), '/LoadBalancingRules.json', parameters('SasToken'))]",
           "contentVersion": "2017.09.01.0"
         },
         "parameters": {
           "Name": {
-            "value": "Rule-002"
+            "value": "[concat(variables('LoadBalancingRuleName'),'-002')]"
           },
           "FrontendIPConfigurationId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
@@ -215,7 +229,7 @@
         },
         "parameters": {
           "Name": {
-            "value": "FEIP-001"
+            "value": "[variables('LoadBalancerName')]"
           },
           "FrontendIpConfigurations": {
             "value": "[createArray(reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value)]"
