@@ -52,10 +52,30 @@
       }
     },
     {
-      "name": "BuildLoadBalancingProbes-PROBE001",
+      "name": "BuildLoadBalancingBackendAddressPool-BEP001",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
       "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUri'), '/BackendAddressPools.json', parameters('SasToken'))]",
+          "contentVersion": "2017.09.01.0"
+        },
+        "parameters": {
+          "Name": {
+            "value": "BEPool-001"
+          }
+        }
+      }
+    },
+    {
+      "name": "BuildLoadBalancingProbes-PROBE001",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingFrontendIpConfigurations-FEIP001')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -86,6 +106,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
       "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingFrontendIpConfigurations-FEIP001')]",
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingBackendAddressPool-BEP001')]",
         "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingProbes-PROBE001')]"
       ],
       "properties": {
@@ -102,7 +124,7 @@
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
           "BackendAddressPoolId": {
-            "value": "<< RESOURCE ID PLACEHOLDER >>"
+            "value": "[createArray(reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value)]"
           },
           "Protocol": {
             "value": "TCP"
@@ -133,6 +155,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
       "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingFrontendIpConfigurations-FEIP001')]",
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingBackendAddressPool-BEP001')]",
         "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingProbes-PROBE001')]"
       ],
       "properties": {
@@ -149,7 +173,7 @@
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
           "BackendAddressPoolId": {
-            "value": "<< RESOURCE ID PLACEHOLDER >>"
+            "value": "[createArray(reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value)]"
           },
           "Protocol": {
             "value": "TCP"
@@ -174,14 +198,51 @@
           }
         }
       }
+    },
+    {
+      "name": "BuildLoadBalancer-LB001",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingRules-RULE001')]",
+        "[concat('Microsoft.Resources/deployments/','BuildLoadBalancingRules-RULE002')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUri'), '/LoadBalancer.json', parameters('SasToken'))]",
+          "contentVersion": "2017.09.01.0"
+        },
+        "parameters": {
+          "Name": {
+            "value": "FEIP-001"
+          },
+          "FrontendIpConfigurations": {
+            "value": "[createArray(reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value)]"
+          },
+          "BackendAddressPools": {
+            "value": "[createArray(reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value)]"
+          },
+          "LoadBalancingRules": {
+            "value": "[createArray(reference('BuildLoadBalancingRules-RULE001').outputs.loadBalancerRule.value,reference('BuildLoadBalancingRules-RULE002').outputs.loadBalancerRule.value)]"
+          },
+          "Probes": {
+            "value": "[createArray(reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value)]"
+          }
+        }
+      }
     }
   ],
   "outputs": {
-    "ipConfig": {
+    "FrontendIpConfigurations": {
       "type": "array",
       "value": "[createArray(reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value)]"
     },
-    "Rules": {
+    "BackendAddressPools": {
+      "type": "array",
+      "value": "[createArray(reference('BuildLoadBalancingBackendAddressPool-BEP001').outputs.backendAddressPools.value)]"
+    },
+    "LoadBalancingRules": {
       "type": "array",
       "value": "[createArray(reference('BuildLoadBalancingRules-RULE001').outputs.loadBalancerRule.value,reference('BuildLoadBalancingRules-RULE002').outputs.loadBalancerRule.value)]"
     },
