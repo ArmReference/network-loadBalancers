@@ -2,13 +2,13 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "RuleName": {
+    "Name": {
       "type": "string"
     },
-    "frontendIPConfiguration": {
+    "frontendIPConfigurationId": {
       "type": "string"
     },
-    "backendAddressPool": {
+    "backendAddressPoolId": {
       "type": "string"
     },
     "Protocol": {
@@ -28,19 +28,19 @@
       "type": "int",
       "defaultValue": 5
     },
-    "probe": {
+    "probeId": {
       "type": "string"
     }
   },
   "variables": {
     "rule": {
-      "name": "[parameters('RuleName')]",
+      "name": "[parameters('Name')]",
       "properties": {
         "frontendIPConfiguration": {
-          "id": "[parameters('frontendIPConfiguration')]"
+          "id": "[parameters('frontendIPConfigurationId')]"
         },
         "backendAddressPool": {
-          "id": "[parameters('backendAddressPool')]"
+          "id": "[parameters('backendAddressPoolId')]"
         },
         "protocol": "[parameters('Protocol')]",
         "frontendPort": "[parameters('frontendPort')]",
@@ -48,7 +48,7 @@
         "enableFloatingIP": "[parameters('enableFloatingIP')]",
         "idleTimeoutInMinutes": "[parameters('idleTimeoutInMinutes')]",
         "probe": {
-          "id": "[parameters('probe')]"
+          "id": "[parameters('probeId')]"
         }
       }
     }

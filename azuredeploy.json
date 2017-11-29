@@ -95,13 +95,13 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "RuleName": {
+          "Name": {
             "value": "Rule-001"
           },
-          "frontendIPConfiguration": {
+          "frontendIPConfigurationId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
-          "backendAddressPool": {
+          "backendAddressPoolId": {
             "value": "<< RESOURCE ID PLACEHOLDER >>"
           },
           "protocol": {
@@ -119,7 +119,7 @@
           "idleTimeoutInMinutes": {
             "value": 5
           },
-          "probe": {
+          "probeId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value.name)]"
           }
         }
@@ -139,13 +139,13 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "RuleName": {
+          "Name": {
             "value": "Rule-002"
           },
-          "frontendIPConfiguration": {
+          "frontendIPConfigurationId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/frontendIPConfigurations/',reference('BuildLoadBalancingFrontendIpConfigurations-FEIP001').outputs.frontendIPConfigurations.value.name)]"
           },
-          "backendAddressPool": {
+          "backendAddressPoolId": {
             "value": "<< RESOURCE ID PLACEHOLDER >>"
           },
           "protocol": {
@@ -163,7 +163,7 @@
           "idleTimeoutInMinutes": {
             "value": 30
           },
-          "probe": {
+          "probeId": {
             "value": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/loadBalancers/',variables('LoadBalancerName'),'/probes/',reference('BuildLoadBalancingProbes-PROBE001').outputs.loadBalancerProbe.value.name)]"
           }
         }
