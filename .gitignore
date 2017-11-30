@@ -11,6 +11,7 @@
 *.targets
 *.deployproj
 *.sln
+azuredeploy.*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
