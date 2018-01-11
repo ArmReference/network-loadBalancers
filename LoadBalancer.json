@@ -36,6 +36,18 @@
   "variables": {
     "comments": {
       "documentation": "https://docs.microsoft.com/en-us/rest/api/load-balancer/loadbalancers/createorupdate#definitions_loadbalancer"
+    },
+    "loadBalancers": {
+      "type": "Microsoft.Network/loadBalancers",
+      "name": "[parameters('Name')]",
+      "apiVersion": "2017-09-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "frontendIPConfigurations": "[parameters('FrontendIpConfigurations')]",
+        "backendAddressPools": "[parameters('BackendAddressPools')]",
+        "loadBalancingRules": "[parameters('LoadBalancingRules')]",
+        "probes": "[parameters('Probes')]"
+      }
     }
   },
   "resources": [
@@ -53,5 +65,9 @@
     }
   ],
   "outputs": {
+    "loadBalancers": {
+      "type": "object",
+      "value": "[variables('loadBalancers')]"
+    }
   }
 }
