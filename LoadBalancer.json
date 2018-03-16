@@ -31,6 +31,13 @@
       "metadata": {
         "description": "Collection of probe objects used in the load balancer"
       }
+    },
+    "DependsOn": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "Pass dependencies"
+      }
     }
   },
   "variables": {
@@ -42,6 +49,7 @@
       "name": "[parameters('Name')]",
       "apiVersion": "2017-09-01",
       "location": "[resourceGroup().location]",
+      "dependsOn": "[if(empty(parameters('DependsOn')),json('null'),parameters('DependsOn'))]",
       "properties": {
         "frontendIPConfigurations": "[parameters('FrontendIpConfigurations')]",
         "backendAddressPools": "[parameters('BackendAddressPools')]",
@@ -56,6 +64,7 @@
       "name": "[parameters('Name')]",
       "apiVersion": "2017-09-01",
       "location": "[resourceGroup().location]",
+      "dependsOn": "[if(empty(parameters('DependsOn')),json('null'),parameters('DependsOn'))]",
       "properties": {
         "frontendIPConfigurations": "[parameters('FrontendIpConfigurations')]",
         "backendAddressPools": "[parameters('BackendAddressPools')]",
