@@ -58,21 +58,7 @@
       }
     }
   },
-  "resources": [
-    {
-      "type": "Microsoft.Network/loadBalancers",
-      "name": "[parameters('Name')]",
-      "apiVersion": "2017-09-01",
-      "location": "[resourceGroup().location]",
-      "dependsOn": "[if(empty(parameters('DependsOn')),json('null'),parameters('DependsOn'))]",
-      "properties": {
-        "frontendIPConfigurations": "[parameters('FrontendIpConfigurations')]",
-        "backendAddressPools": "[parameters('BackendAddressPools')]",
-        "loadBalancingRules": "[parameters('LoadBalancingRules')]",
-        "probes": "[parameters('Probes')]"
-      }
-    }
-  ],
+  "resources": [ ],
   "outputs": {
     "loadBalancers": {
       "type": "object",
